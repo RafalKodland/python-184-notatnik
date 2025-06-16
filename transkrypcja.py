@@ -13,6 +13,3 @@ def speech():
         result = recog.recognize_google(audio, language="pl-PL")
 
         return result
-    
-
-print(speech())

@@ -2,6 +2,7 @@
 from flask import Flask, render_template,request, redirect
 # Podłączenie biblioteki bazy danych
 from flask_sqlalchemy import SQLAlchemy
+from transkrypcja import speech
 
 
 app = Flask(__name__)
@@ -107,13 +108,18 @@ def form_create():
         title =  request.form['title']
         subtitle =  request.form['subtitle']
         text =  request.form['text']
+        action = request.form['action']
 
-        # Tworzenie obiektu, który zostanie wysłany do bazy danych
-        card = Card(title=title, subtitle=subtitle, text=text)
+        if action == "create":
+            # Tworzenie obiektu, który zostanie wysłany do bazy danych
+            card = Card(title=title, subtitle=subtitle, text=text)
 
-        db.session.add(card)
-        db.session.commit()
-        return redirect('/index')
+            db.session.add(card)
+            db.session.commit()
+            return redirect('/index')
+        else:
+            transcription = speech()
+            return render_template('create_card.html', text=transcription)
     else:
         return render_template('create_card.html')
 
